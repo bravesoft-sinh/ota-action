@@ -1,4 +1,4 @@
-# GitHub Actions for Firebase
+# GitHub Actions for OTA
 
 This Action for [firebase-tools](https://github.com/firebase/firebase-tools) enables arbitrary actions with the `firebase` command-line client.
 

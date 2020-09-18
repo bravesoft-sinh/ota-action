@@ -2,25 +2,16 @@
 
 set -e
 
-if [ -z "$FIREBASE_TOKEN" ] && [ -z "$GCP_SA_KEY" ]; then
-  echo "Either FIREBASE_TOKEN or GCP_SA_KEY is required to run commands with the firebase cli"
+if [ -z "$HOST_NAME" ] && [ -z "$SSH_KEY" ] && [ -z "$USER" ]; then
+  echo "Can not ssh to your OTA server"
   exit 126
 fi
 
-if [ -n "$GCP_SA_KEY" ]; then
-  echo "Storing GCP_SA_KEY in /opt/gcp_key.json"
-  echo "$GCP_SA_KEY" | base64 -d > /opt/gcp_key.json
-  echo "Exporting GOOGLE_APPLICATION_CREDENTIALS=/opt/gcp_key.json"
-  export GOOGLE_APPLICATION_CREDENTIALS=/opt/gcp_key.json
+echo "$SSH_KEY" >~/.ssh/ota.pem
+chmod 600 ~/.ssh/ota.pem
+if [ -z "$PROJECT_NAME" ] ; then
+  echo "Please set your project server"
+  exit 126
 fi
 
-if [ -n "$PROJECT_PATH" ]; then
-  cd "$PROJECT_PATH"
-fi
-
-if [ -n "$PROJECT_ID" ]; then
-    echo "setting firebase project to $PROJECT_ID"
-    firebase use --add "$PROJECT_ID"
-fi
-
-sh -c "firebase $*"
+scp -i ~/.ssh/ota.pem -R dist/* $USER@$HOST_NAME:/var/www/html/$PROJECT_NAME/
