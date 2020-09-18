@@ -7,11 +7,11 @@ if [ -z "$HOST_NAME" ] && [ -z "$SSH_KEY" ] && [ -z "$USER" ]; then
   exit 126
 fi
 
-echo "$SSH_KEY" >~/.ssh/ota.pem
-chmod 600 ~/.ssh/ota.pem
+echo "$SSH_KEY" >ota.pem
+chmod 600 ota.pem
 if [ -z "$PROJECT_NAME" ] ; then
   echo "Please set your project server"
   exit 126
 fi
 
-scp -i ~/.ssh/ota.pem -R dist/* $USER@$HOST_NAME:/var/www/html/$PROJECT_NAME/
+scp -i ota.pem -R dist/* $USER@$HOST_NAME:/var/www/html/$PROJECT_NAME/
